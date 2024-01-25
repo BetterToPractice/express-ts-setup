@@ -1,18 +1,28 @@
 Express TS Setup
 ====================================
 
-### Migrations
+## How to Run
+### Run Database:
 ```
-npm run migrate
-npm run make:migrations --migration_name=create_foos_table
+docker-compose up -d --build
 ```
-
-### Run App
-database:
-```
-docker-compose up -d --build  
-```
-server (dev):
+### Run Applications:
 ```
 npm run dev
+npm run start
 ```
+
+
+## Migration
+### New migration:
+```
+npm run make:migrations --migration_name=create_foos_table
+```
+### Run migrate:
+```
+npm run migrate
+```
+
+
+## Contributors
+- Agung Yuliyanto: [Github](https://github.com/agung96tm), [LinkedIn](https://www.linkedin.com/in/agung96tm/)
