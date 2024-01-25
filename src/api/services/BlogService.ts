@@ -10,4 +10,8 @@ export class BlogService {
   async getAllPosts(resourceOptions?: object) {
     return await this.postRepository.getManyAndCount(resourceOptions);
   }
+
+  async getPostById(id: number, resourceOptions?: object) {
+    return await this.postRepository.getOneById(id, resourceOptions);
+  }
 }
