@@ -1,16 +1,17 @@
-import { Get, JsonController } from 'routing-controllers';
+import { Get, JsonController, QueryParams } from 'routing-controllers';
 import { Service } from 'typedi';
-import AppDataSource from '../../libs/database';
-import { Post } from '../../models/Post';
+import { RequestQueryParser } from '../../libs/query-parser';
+import { BlogService } from '../services/BlogService';
 
 @Service()
 @JsonController('/blog')
 export class BlogController {
-  private postRepository = AppDataSource.getRepository(Post);
+  constructor(private blogService: BlogService) {}
 
-  @Get()
-  async index() {
-    return await this.postRepository.findAndCount();
+  @Get('/posts')
+  async index(@QueryParams() parseResourceOptions: RequestQueryParser) {
+    const resourceOptions = parseResourceOptions.getAll();
+    return this.blogService.getAllPosts(resourceOptions);
   }
 
   @Get('/:id')
