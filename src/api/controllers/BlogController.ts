@@ -1,8 +1,11 @@
-import { Body, Delete, Get, HttpCode, JsonController, Param, Patch, Post, QueryParams } from 'routing-controllers';
+import { Body, Delete, Get, HttpCode, JsonController, Param, Patch, Post, QueryParams, UseBefore } from 'routing-controllers';
 import { Service } from 'typedi';
 import { RequestQueryParser } from '../../libs/query-parser';
 import { BlogService } from '../services/BlogService';
 import { PostCreateRequest, PostUpdateRequest } from '../requests/PostRequest';
+import { AuthCheck } from '../middlewares/AuthCheck';
+import { LoggedInUser } from '../decorators/LoggedInUser';
+import { LoggedUserInterface } from '../interfaces/ILoggedInUser';
 
 @Service()
 @JsonController('/blog')
@@ -22,8 +25,9 @@ export class BlogController {
   }
 
   @Post('/posts')
-  async create(@Body() post: PostCreateRequest) {
-    return this.blogService.createPost(post);
+  @UseBefore(AuthCheck)
+  async create(@Body() post: PostCreateRequest, @LoggedInUser() loggedInUser: LoggedUserInterface) {
+    return this.blogService.createPost(post, loggedInUser);
   }
 
   @Patch('/posts/:id')

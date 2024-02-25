@@ -3,7 +3,8 @@ import AppDataSource from '../../libs/database';
 import { Post } from '../../models/Post';
 import { MainRepository } from '../../libs/query-parser';
 import { PostCreateRequest, PostUpdateRequest } from '../requests/PostRequest';
-import { PostNotFoundError } from '../exceptions/Post';
+import { LoggedUserInterface } from '../interfaces/ILoggedInUser';
+// import { PostNotFoundError } from '../exceptions/Post';
 
 @Service()
 export class BlogService {
@@ -17,16 +18,21 @@ export class BlogService {
     return await this.postRepository.getOneById(id, resourceOptions);
   }
 
-  async createPost(post: PostCreateRequest) {
+  async createPost(post: PostCreateRequest, loggedInUser: LoggedUserInterface) {
     const entity = new Post();
     Object.assign(entity, post);
+
+    if (loggedInUser) {
+      // entity.user_id = loggedInUser.id;
+    }
+
     return await this.postRepository.save(entity);
   }
 
   async updatePostById(id: number, post: PostUpdateRequest) {
     const entity = await this.postRepository.getOneById(id);
     if (!entity) {
-      throw new PostNotFoundError();
+      // throw new PostNotFoundError();
     }
     Object.assign(entity, post);
     return await this.postRepository.save(entity);
